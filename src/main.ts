@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -18,6 +19,10 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views')); //view 
   app.setViewEngine('ejs');
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  //set global jwt auth guard
+  const reflector: Reflector = new Reflector();
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
 
   const config = new DocumentBuilder()
     .setTitle('Median')
