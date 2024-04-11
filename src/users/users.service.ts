@@ -17,20 +17,21 @@ export class UsersService {
   }
 
   create(createUserDto: CreateUserDto) {
-    return this.prisma.user.create({ data: createUserDto });
+    const { name, email } = createUserDto;
+    const password = this.getHashPassword(createUserDto.password);
+
+    return this.prisma.user.create({
+      data: { name, email, password }, // Destructure directly
+    });
   }
+
 
   findAll() {
     return this.prisma.user.findMany();
   }
 
   findOne(id: number) {
-    return this.prisma.article.findUnique({
-      where: { id },
-      include: {
-        author: true,
-      },
-    });
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

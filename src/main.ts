@@ -10,11 +10,6 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors();
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-    }),
-  );
   app.useStaticAssets(join(__dirname, '..', 'public')); //js, css, images
   app.setBaseViewsDir(join(__dirname, '..', 'views')); //view 
   app.setViewEngine('ejs');
@@ -23,7 +18,7 @@ async function bootstrap() {
   //set global jwt auth guard
   const reflector: Reflector = new Reflector();
   app.useGlobalGuards(new JwtAuthGuard(reflector));
-
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   const config = new DocumentBuilder()
     .setTitle('Median')
     .setDescription('The Median API description')

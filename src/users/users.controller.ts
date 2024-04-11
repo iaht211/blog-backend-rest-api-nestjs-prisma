@@ -17,6 +17,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Public } from 'src/decorator/customize';
 
 // src/users/users.controller.ts
 
@@ -25,25 +26,24 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+  @Public()
   @Post()
-
   @ApiCreatedResponse({ type: UserEntity })
   async create(@Body() createUserDto: CreateUserDto) {
-    return new UserEntity(await this.usersService.create(createUserDto));
+    console.log(createUserDto)
+    return this.usersService.create(createUserDto)
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: UserEntity, isArray: true })
   async findAll() {
-    const users = await this.usersService.findAll();
-    return users.map((user) => new UserEntity(user));
+    return this.usersService.findAll()
   }
 
   @Get(':id')
   @ApiOkResponse({ type: UserEntity })
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new UserEntity(await this.usersService.findOne(id));
+    return this.usersService.findOne(id)
   }
 
   @Patch(':id')
@@ -52,12 +52,12 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return new UserEntity(await this.usersService.update(id, updateUserDto));
+    return await this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: UserEntity })
   async remove(@Param('id', ParseIntPipe) id: number) {
-    return new UserEntity(await this.usersService.remove(id));
+    return await this.usersService.remove(id);
   }
 }
