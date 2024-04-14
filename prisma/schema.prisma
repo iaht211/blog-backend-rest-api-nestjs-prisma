@@ -20,4 +20,16 @@ model User {
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+   package   Package?   @relation(fields: [packageId], references: [id])
+  packageId Int?  
+}
+
+model Package {
+  id             Int      @id @default(autoincrement())
+  name           String   @unique
+  time           String?  
+  cost            Int?
+  description     String?
+  users         User[] 
 }

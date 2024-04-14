@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 
 
-export class UserEntity {
+export class PackageEntity {
     @ApiProperty()
     id: number;
 
@@ -11,10 +11,10 @@ export class UserEntity {
     name: string;
 
     @ApiProperty()
-    email: string;
+    time: string;
 
     @Exclude()
-    password: string;
+    description: string;
 
     @ApiProperty()
     createdAt: Date;
@@ -36,9 +36,5 @@ export class UserEntity {
         name: string | null;
         email: string | null
     };
-
-    @ApiProperty({ required: false, nullable: true })
-    packageId: number | null;
-
 
 }
