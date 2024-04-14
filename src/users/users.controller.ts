@@ -17,7 +17,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Public } from 'src/decorator/customize';
+import { Public, User } from 'src/decorator/customize';
+import { IUser } from './users.interface';
 
 // src/users/users.controller.ts
 
@@ -26,12 +27,17 @@ import { Public } from 'src/decorator/customize';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
-  @Public()
+
   @Post()
   @ApiCreatedResponse({ type: UserEntity })
   async create(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto)
     return this.usersService.create(createUserDto)
+  }
+
+  @Get(':id')
+  @ApiOkResponse({ type: UserEntity })
+  async findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id)
   }
 
   @Get()
@@ -40,19 +46,13 @@ export class UsersController {
     return this.usersService.findAll()
   }
 
-  @Get(':id')
-  @ApiOkResponse({ type: UserEntity })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(id)
-  }
-
   @Patch(':id')
   @ApiCreatedResponse({ type: UserEntity })
   async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto, @User() user: IUser
   ) {
-    return await this.usersService.update(id, updateUserDto);
+    return await this.usersService.update(+id, updateUserDto, user);
   }
 
   @Delete(':id')

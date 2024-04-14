@@ -17,8 +17,10 @@ async function bootstrap() {
 
   //set global jwt auth guard
   const reflector: Reflector = new Reflector();
-  app.useGlobalGuards(new JwtAuthGuard(reflector));
+  //app.useGlobalGuards(new JwtAuthGuard(reflector));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
   const config = new DocumentBuilder()
     .setTitle('Median')
     .setDescription('The Median API description')

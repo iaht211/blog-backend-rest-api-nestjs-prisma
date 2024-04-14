@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
+import { IUser } from './users.interface';
 
 
 @Injectable()
@@ -16,12 +17,12 @@ export class UsersService {
     return hash;
   }
 
-  create(createUserDto: CreateUserDto) {
-    const { name, email } = createUserDto;
-    const password = this.getHashPassword(createUserDto.password);
+  create(createUserDto: any) {
+    // const { name, email } = createUserDto;
+    // const password = this.getHashPassword(createUserDto.password);
 
     return this.prisma.user.create({
-      data: { name, email, password }, // Destructure directly
+      data: createUserDto, // Destructure directly
     });
   }
 
@@ -34,7 +35,7 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: number, updateUserDto: any, user: IUser) {
     return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }
 
@@ -42,13 +43,15 @@ export class UsersService {
     return this.prisma.user.delete({ where: { id } });
   }
 
-  findOneByUsername(username: string) {
+  findOneByUsername(email: string) { // Allow email to be null
     return this.prisma.user.findUnique({
-      where: {
-        email: username
-      }
-    })
+      where: { email }, // Optional chaining and lowercase conversion
+    });
   }
+
+
+
+
 
   isValidPassword(password: string, hash: string) {
     return compareSync(password, hash);

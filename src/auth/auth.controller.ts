@@ -11,7 +11,7 @@ import { Public } from 'src/decorator/customize';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @Public()
+  // @Public()
   @Post('login')
   @ApiOkResponse({ type: AuthEntity })
   login(@Body() { email, password }: LoginDto) {

@@ -9,12 +9,6 @@ export class UserEntity {
     id: number;
 
     @ApiProperty()
-    createdAt: Date;
-
-    @ApiProperty()
-    updatedAt: Date;
-
-    @ApiProperty()
     name: string;
 
     @ApiProperty()
@@ -22,4 +16,26 @@ export class UserEntity {
 
     @Exclude()
     password: string;
+
+    @ApiProperty()
+    createdAt: Date;
+
+    @ApiProperty()
+    updatedAt: Date;
+
+    @ApiProperty()
+    deletedAt: Date;
+
+    @ApiProperty()
+    createdBy: {
+        name: string | null;
+        email: string | null
+    }
+
+    @ApiProperty()
+    deletedBy: {
+        name: string | null;
+        email: string | null
+    };
+
 }
