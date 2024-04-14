@@ -49,10 +49,6 @@ export class UsersService {
     });
   }
 
-
-
-
-
   isValidPassword(password: string, hash: string) {
     return compareSync(password, hash);
   }
