@@ -31,6 +31,7 @@ export class UsersController {
   @Post()
   @ApiCreatedResponse({ type: UserEntity })
   async create(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto)
     return this.usersService.create(createUserDto)
   }
 

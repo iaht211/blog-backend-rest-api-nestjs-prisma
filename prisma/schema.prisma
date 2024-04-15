@@ -22,11 +22,12 @@ model User {
   updatedAt DateTime  @updatedAt
 
    package   Package?   @relation(fields: [packageId], references: [id])
-  packageId Int?  
+  packageId Int? 
+ 
 }
 
 model Package {
-  id             Int      @id @default(autoincrement())
+  id             Int      @id @default(autoincrement()) 
   name           String   @unique
   time           String?  
   cost            Int?

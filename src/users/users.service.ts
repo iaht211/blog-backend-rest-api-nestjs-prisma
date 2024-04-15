@@ -18,9 +18,6 @@ export class UsersService {
   }
 
   create(createUserDto: any) {
-    // const { name, email } = createUserDto;
-    // const password = this.getHashPassword(createUserDto.password);
-
     return this.prisma.user.create({
       data: createUserDto, // Destructure directly
     });
@@ -32,7 +29,12 @@ export class UsersService {
   }
 
   findOne(id: number) {
-    return this.prisma.user.findUnique({ where: { id } });
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        package: true,
+      },
+    });
   }
 
   update(id: number, updateUserDto: any, user: IUser) {

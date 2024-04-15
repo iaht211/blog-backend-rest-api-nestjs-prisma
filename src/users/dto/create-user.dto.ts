@@ -19,4 +19,8 @@ export class CreateUserDto {
     // @MinLength(6)
     @ApiProperty()
     password: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    packageId: string;
 }

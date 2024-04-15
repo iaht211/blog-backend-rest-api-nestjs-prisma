@@ -4,6 +4,9 @@ import { Exclude } from 'class-transformer';
 
 
 export class PackageEntity {
+    constructor(partial: Partial<PackageEntity>) {
+        Object.assign(this, partial);
+    }
     @ApiProperty()
     id: number;
 
@@ -12,6 +15,9 @@ export class PackageEntity {
 
     @ApiProperty()
     time: string;
+
+    @ApiProperty()
+    cost: number;
 
     @Exclude()
     description: string;
@@ -36,5 +42,7 @@ export class PackageEntity {
         name: string | null;
         email: string | null
     };
+
+
 
 }
