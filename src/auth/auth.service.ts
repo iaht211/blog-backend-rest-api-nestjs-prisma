@@ -2,12 +2,15 @@
 import {
     Injectable,
     NotFoundException,
+    Response,
     UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from './../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthEntity } from './entity/auth.entity';
 import { UsersService } from 'src/users/users.service';
+import ms from 'ms';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +18,7 @@ export class AuthService {
         private prisma: PrismaService,
         private jwtService: JwtService,
         private usersService: UsersService,
+        private configService: ConfigService
     ) { }
 
     async validateUser(username: string, pass: string): Promise<any> {
@@ -36,7 +40,7 @@ export class AuthService {
 
     }
 
-    async login(email: string, password: string) {
+    async login(email: string, password: string, @Response() response,) {
         // Step 1: Fetch a user with the given email
         const user = await this.usersService.findOneByUsername(email);
 
@@ -59,14 +63,32 @@ export class AuthService {
             iss: "from server",
             id, name, email
         };
+
+        const refresh_token = this.createRefreshToken(payload)
+        //update user with refresh token 
+        await this.usersService.updateUserToken(refresh_token, +id)
+        //set refresh token cookie
+        // http Only là chỉ có server mới có thể xem được
+        response.cookie('refresh_token', refresh_token, {
+            httpOnly: true,
+            maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE'))
+        })
         // Step 3: Generate a JWT containing the user's ID and return it
         return {
             accessToken: this.jwtService.sign({ payload }),
+            refreshToken: refresh_token,
             user: {
-                id, name, email,
-                // permissions: temp?.permissions ?? [] 
+                id, name, email
             }
+
         };
     }
 
+    createRefreshToken = (payload: any) => {
+        const refresh_token = this.jwtService.sign(payload, {
+            secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
+            expiresIn: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')) / 1000,
+        })
+        return refresh_token
+    }
 }

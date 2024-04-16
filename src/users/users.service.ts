@@ -18,8 +18,11 @@ export class UsersService {
   }
 
   create(createUserDto: any) {
+    const password = this.getHashPassword(createUserDto.password)
+    const { email, name, packageId } = createUserDto;
+    const input = { email, name, packageId, password }
     return this.prisma.user.create({
-      data: createUserDto, // Destructure directly
+      data: input, // Destructure directly
     });
   }
 
@@ -53,5 +56,10 @@ export class UsersService {
 
   isValidPassword(password: string, hash: string) {
     return compareSync(password, hash);
+  }
+
+  updateUserToken(refresh_token: string, id: number) {
+    const refreshToken = { refreshToken: refresh_token }
+    return this.prisma.user.update({ where: { id }, data: refreshToken });
   }
 }

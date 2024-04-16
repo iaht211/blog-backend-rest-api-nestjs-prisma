@@ -6,6 +6,7 @@ import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { TransformInterceptor } from './core/transform.interceptor';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -18,9 +19,11 @@ async function bootstrap() {
 
   //set global jwt auth guard
   const reflector: Reflector = new Reflector();
-  //app.useGlobalGuards(new JwtAuthGuard(reflector));
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
   app.useGlobalInterceptors(new TransformInterceptor(reflector), new ClassSerializerInterceptor(reflector));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  //config cookie
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle('Median')

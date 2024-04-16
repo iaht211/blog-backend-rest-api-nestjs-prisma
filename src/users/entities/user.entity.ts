@@ -37,6 +37,10 @@ export class UserEntity {
         email: string | null
     };
 
+    @ApiProperty()
+    refreshToken: string;
+
+
     @ApiProperty({ required: false, nullable: true })
     packageId: number | null;
 

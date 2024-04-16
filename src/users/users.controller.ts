@@ -30,7 +30,7 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse({ type: UserEntity })
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto, @User() user: IUser) {
     console.log(createUserDto)
     return this.usersService.create(createUserDto)
   }
@@ -58,7 +58,7 @@ export class UsersController {
 
   @Delete(':id')
   @ApiOkResponse({ type: UserEntity })
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseIntPipe) id: number, @User() user: IUser) {
     return await this.usersService.remove(id);
   }
 }
