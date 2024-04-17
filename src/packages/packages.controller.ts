@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query, Request } from '@nestjs/common';
 import { PackagesService } from './packages.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
@@ -18,9 +18,16 @@ export class PackagesController {
 
   @Get()
   @ApiOkResponse({ type: PackageEntity, isArray: true })
-  findAll() {
-    return this.packagesService.findAll();
+  findAll(
+    @Query("take") take: string,
+    @Query("page") page: string,
+  ) {
+    // console.log(page, take);
+    return this.packagesService.searchUser(
+      +page, +take
+    );
   }
+
 
   @Get(':id')
   @ApiOkResponse({ type: PackageEntity })

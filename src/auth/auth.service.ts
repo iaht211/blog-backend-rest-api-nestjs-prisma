@@ -1,8 +1,8 @@
 //src/auth/auth.service.ts
 import {
+    BadRequestException,
     Injectable,
     NotFoundException,
-    Response,
     UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from './../prisma/prisma.service';
@@ -11,6 +11,7 @@ import { AuthEntity } from './entity/auth.entity';
 import { UsersService } from 'src/users/users.service';
 import ms from 'ms';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,7 @@ export class AuthService {
 
     }
 
-    async login(email: string, password: string, @Response() response,) {
+    async login(email: string, password: string, response: Response) {
         // Step 1: Fetch a user with the given email
         const user = await this.usersService.findOneByUsername(email);
 
@@ -90,5 +91,45 @@ export class AuthService {
             expiresIn: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')) / 1000,
         })
         return refresh_token
+    }
+
+    async precessNewToken(refreshToken: string, response: Response) {
+        try {
+            this.jwtService.verify(refreshToken, {
+                secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
+            })
+            let user = await this.usersService.findUserByToken(refreshToken);
+
+            const { id, name, email } = user;
+            const payload = {
+                sub: "token refresh",
+                iss: "form server",
+
+                id,
+                name,
+                email,
+            };
+            const refresh_token = await this.createRefreshToken(payload)
+            //update user with refresh token 
+            await this.usersService.updateUserToken(refresh_token, +id)
+
+            response.clearCookie("refresh_token")
+
+            response.cookie('refresh_token', refresh_token, {
+                httpOnly: true,
+                maxAge: ms(this.configService.get<string>("JWT_REFRESH_EXPIRE"))
+            })
+
+            return {
+                access_token: this.jwtService.sign(payload),
+                user: {
+                    id,
+                    name,
+                    email,
+                }
+            };
+        } catch (error) {
+            throw new BadRequestException(`Refresh token đã hết hạn không hợp lệ. vui lòng login`);
+        }
     }
 }

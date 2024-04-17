@@ -62,4 +62,11 @@ export class UsersService {
     const refreshToken = { refreshToken: refresh_token }
     return this.prisma.user.update({ where: { id }, data: refreshToken });
   }
+
+  findUserByToken(refreshToken: string) {
+    const data = { refreshToken };
+    return this.prisma.user.findUnique({
+      where: { refreshToken }
+    });
+  }
 }

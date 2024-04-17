@@ -31,6 +31,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.2.1",
+    "@nodeteam/nestjs-prisma-pagination": "^1.0.6",
     "@prisma/client": "^4.16.2",
     "@types/ms": "^0.7.34",
     "bcryptjs": "^2.4.3",
