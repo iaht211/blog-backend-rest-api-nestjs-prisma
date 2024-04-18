@@ -23,4 +23,8 @@ export class CreateUserDto {
     @IsNotEmpty()
     @ApiProperty()
     packageId: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    roomId: string;
 }

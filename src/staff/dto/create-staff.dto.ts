@@ -18,4 +18,8 @@ export class CreateStaffDto {
     @IsNotEmpty()
     @ApiProperty()
     description: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    roomId?: number;
 }

@@ -3,9 +3,9 @@ import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 
-@Controller('room')
+@Controller('rooms')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) {}
+  constructor(private readonly roomService: RoomService) { }
 
   @Post()
   create(@Body() createRoomDto: CreateRoomDto) {

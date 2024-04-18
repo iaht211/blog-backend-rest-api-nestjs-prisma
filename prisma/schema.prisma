@@ -61,7 +61,7 @@ model Staff {
   description     String?
 
   room   Room?   @relation(fields: [roomId], references: [id])
-  roomId Int? 
+  roomId          Int? 
 
   feedbacks       Feedback[]
 }
@@ -73,4 +73,17 @@ model Room {
 
   users User[]
   staffs Staff[]
+
+  devices Device[]
+}
+
+model Device {
+  id             Int      @id @default(autoincrement()) 
+  name  String?
+  count Int?
+  origin  String?
+  status  String?
+  date    String?
+  room   Room?   @relation(fields: [roomId], references: [id])
+  roomId          Int? 
 }

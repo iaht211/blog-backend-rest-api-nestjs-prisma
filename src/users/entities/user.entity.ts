@@ -44,7 +44,7 @@ export class UserEntity {
     @ApiProperty({ required: false, nullable: true })
     packageId: number | null;
 
-    // @ApiProperty({ required: false, type: PackageEntity })
-    // package?: PackageEntity;
+    @ApiProperty({ required: false, nullable: true })
+    roomId: number | null;
 
 }

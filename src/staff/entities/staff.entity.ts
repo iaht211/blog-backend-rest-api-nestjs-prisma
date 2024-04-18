@@ -28,5 +28,6 @@ export class Staff {
         email: string | null
     }
 
-
+    @ApiProperty({ required: false, nullable: true })
+    roomId: number | null;
 }
