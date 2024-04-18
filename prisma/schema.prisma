@@ -24,6 +24,8 @@ model User {
 
    package   Package?   @relation(fields: [packageId], references: [id])
   packageId Int? 
+
+  feedbacks Feedback[]
  
 }
 
@@ -34,4 +36,12 @@ model Package {
   cost            Int?
   description     String?
   users         User[] 
+}
+
+model Feedback {
+  id             Int      @id @default(autoincrement()) 
+  title           String @unique
+  description     String?
+  user   User?   @relation(fields: [userId], references: [id])
+  userId Int? 
 }

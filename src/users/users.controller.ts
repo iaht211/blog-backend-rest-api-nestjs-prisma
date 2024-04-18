@@ -10,6 +10,7 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -43,9 +44,16 @@ export class UsersController {
 
   @Get()
   @ApiOkResponse({ type: UserEntity, isArray: true })
-  async findAll() {
-    return this.usersService.findAll()
+  findAll(
+    @Query("take") take: string,
+    @Query("page") page: string,
+  ) {
+    // console.log(page, take);
+    return this.usersService.findAll(
+      +page, +take
+    );
   }
+
 
   @Patch(':id')
   @ApiCreatedResponse({ type: UserEntity })

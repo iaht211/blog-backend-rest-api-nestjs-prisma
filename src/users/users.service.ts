@@ -26,9 +26,30 @@ export class UsersService {
     });
   }
 
+  async findAll(
+    page: number,
+    take: number
+  ) {
+    const skip = (page - 1) * take;
 
-  findAll() {
-    return this.prisma.user.findMany();
+    let defaultTake = +take ? +take : 10;
+    const totalItems = (await this.prisma.user.findMany()).length;
+    const totalPages = Math.ceil(totalItems / defaultTake);
+
+    const results = await this.prisma.user.findMany({
+      skip: skip,
+      take: take,
+    })
+    return {
+      meta: {
+        current: page, //trang hiện tại
+        pageSize: take, //số lượng bản ghi đã lấy
+        pages: totalPages, //tổng số trang với điều kiện query
+        total: totalItems // tổng số phần tử (số bản ghi)
+      },
+      results
+    }
+
   }
 
   findOne(id: number) {

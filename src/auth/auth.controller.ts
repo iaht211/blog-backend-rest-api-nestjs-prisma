@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthEntity } from './entity/auth.entity';
 import { LoginDto } from './dto/login.dto';
-import { Public } from 'src/decorator/customize';
+import { Public, User } from 'src/decorator/customize';
 import { Response, Request } from 'express';
+import { LocalAuthGuard } from './local-auth.guard';
+import { IUser } from 'src/users/users.interface';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -17,6 +19,7 @@ export class AuthController {
   login(@Body() { email, password }: LoginDto, @Res({ passthrough: true }) response: Response) {
     return this.authService.login(email, password, response);
   }
+
 
   @Get('refresh')
   refreshTokens(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
