@@ -17,7 +17,23 @@ export class FeedbacksService {
   }
 
   findAll() {
-    return this.prisma.feedback.findMany();
+    return this.prisma.feedback.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        staff: {
+          select: {
+            id: true,
+            name: true,
+            description: true
+          }
+        }
+      },
+    });
   }
 
   async findOne(id: number) {
@@ -30,6 +46,13 @@ export class FeedbacksService {
             name: true,
           },
         },
+        staff: {
+          select: {
+            id: true,
+            name: true,
+            description: true
+          }
+        }
       },
     });
   }

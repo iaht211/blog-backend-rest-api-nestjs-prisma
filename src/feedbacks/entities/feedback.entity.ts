@@ -35,4 +35,7 @@ export class Feedback {
 
     @ApiProperty({ required: false, nullable: true })
     userId: number | null;
+
+    @ApiProperty({ required: false, nullable: true })
+    staffId: number | null;
 }

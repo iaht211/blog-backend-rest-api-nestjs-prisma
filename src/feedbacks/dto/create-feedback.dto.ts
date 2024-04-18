@@ -14,5 +14,7 @@ export class CreateFeedbackDto {
     @ApiProperty()
     userId: number;
 
-
+    @IsNotEmpty()
+    @ApiProperty()
+    staffId: number;
 }
