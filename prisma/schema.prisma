@@ -42,6 +42,20 @@ model Feedback {
   id             Int      @id @default(autoincrement()) 
   title           String @unique
   description     String?
+
   user   User?   @relation(fields: [userId], references: [id])
   userId Int? 
+
+  staff   Staff?   @relation(fields: [staffId], references: [id])
+  staffId Int? 
+}
+
+model Staff {
+  id             Int      @id @default(autoincrement()) 
+  name           String @unique
+  permission      String?
+  type            String?
+  description     String?
+
+  feedbacks       Feedback[]
 }
