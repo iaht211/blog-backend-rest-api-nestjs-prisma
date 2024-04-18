@@ -9,11 +9,12 @@ import { PackagesModule } from './packages/packages.module';
 import { FeedbacksModule } from './feedbacks/feedbacks.module';
 import { StaffModule } from './staff/staff.module';
 import { RoomModule } from './room/room.module';
+import { DeviceModule } from './device/device.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
-  }), PrismaModule, UsersModule, AuthModule, PackagesModule, FeedbacksModule, StaffModule, RoomModule],
+  }), PrismaModule, UsersModule, AuthModule, PackagesModule, FeedbacksModule, StaffModule, RoomModule, DeviceModule],
   controllers: [AppController],
   providers: [AppService],
 })
