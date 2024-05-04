@@ -1,26 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class DeviceService {
+
+  constructor(private prisma: PrismaService) { }
+
   create(createDeviceDto: CreateDeviceDto) {
-    return 'This action adds a new device';
+    console.log(createDeviceDto);
+    return this.prisma.device.create({
+      data: createDeviceDto
+    })
   }
 
   findAll() {
-    return `This action returns all device`;
+    return this.prisma.device.findMany({});
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} device`;
+    return this.prisma.device.findMany({ where: { id } });
   }
 
   update(id: number, updateDeviceDto: UpdateDeviceDto) {
-    return `This action updates a #${id} device`;
+    return this.prisma.device.update({ where: { id }, data: updateDeviceDto });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} device`;
+    return this.prisma.device.delete({ where: { id } });
   }
 }

@@ -73,13 +73,13 @@ model Room {
 
   users User[]
   staffs Staff[]
-
   devices Device[]
+
 }
 
 model Device {
   id             Int      @id @default(autoincrement()) 
-  name  String?
+  name  String? @unique
   count Int?
   origin  String?
   status  String?
